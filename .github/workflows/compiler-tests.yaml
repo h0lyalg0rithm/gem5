@@ -29,6 +29,15 @@ jobs:
         # Scheduled workflows run on the default branch by default. We
         # therefore need to explicitly checkout the develop branch.
                   ref: develop
+
+            - name: ccache
+              uses: hendrikmuhs/ccache-action@v1.2
+              with:
+                key: ${{ matrix.image }}-${{ matrix.opts }}-ccache-${{ github.ref_name }}
+                restore-keys: |
+                  ${{ matrix.image }}-${{ matrix.opts }}-ccache-master
+                  ${{ matrix.image }}-${{ matrix.opts }}-ccache
+
             - name: Compile build/ALL/gem5${{ matrix.opts }} with ${{ matrix.image }}
               run: /usr/bin/env python3 /usr/bin/scons --ignore-style build/ALL/gem5${{ matrix.opts }} -j$(nproc)
               timeout-minutes: 600 # 10 hours
@@ -52,6 +61,15 @@ jobs:
         # Scheduled workflows run on the default branch by default. We
         # therefore need to explicitly checkout the develop branch.
                   ref: develop
+
+            - name: ccache
+              uses: hendrikmuhs/ccache-action@v1.2
+              with:
+                key: ${{ matrix.image }}-${{ matrix.opts }}-${{ matrix.gem-compilation }}-ccache-${{ github.ref_name }}
+                restore-keys: |
+                  ${{ matrix.image }}-${{ matrix.opts }}-${{ matrix.gem-compilation }}-ccache-master
+                  ${{ matrix.image }}-${{ matrix.opts }}-${{ matrix.gem-compilation }}-ccache
+
             - name: Compile build/${{ matrix.gem5-compilation }}/gem5${{ matrix.opts }} with ${{ matrix.image }}
               run: /usr/bin/env python3 /usr/bin/scons --ignore-style build/${{ matrix.gem5-compilation }}/gem5${{ matrix.opts }} -j$(nproc)
               timeout-minutes: 600 # 10 hours
