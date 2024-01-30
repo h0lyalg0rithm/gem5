@@ -9,6 +9,8 @@ on:
         - cron: 00 7 * * 5
   # Allows us to manually start workflow for testing
     workflow_dispatch:
+    push:
+      branches: '*'
 
 jobs:
   # replication of compiler-tests.sh
@@ -18,15 +20,15 @@ jobs:
             matrix:
                 image: [gcc-version-12]
                 opts: [.fast]
-        runs-on: [self-hosted, linux, x64]
+        runs-on: [ubuntu-latest]
         timeout-minutes: 2880 # 48 hours
         container: ghcr.io/gem5/${{ matrix.image }}:latest
         steps:
             - uses: actions/checkout@v3
-              with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-                  ref: develop
+              #              with:
+              #        # Scheduled workflows run on the default branch by default. We
+              #        # therefore need to explicitly checkout the develop branch.
+              #                  ref: develop
 
             - name: ccache
               uses: hendrikmuhs/ccache-action@v1.2
@@ -48,15 +50,15 @@ jobs:
                 gem5-compilation: [RISCV]
                 image: [gcc-version-12]
                 opts: [.opt]
-        runs-on: [self-hosted, linux, x64]
+        runs-on: [ubuntu-latest]
         timeout-minutes: 2880 # 48 hours
         container: ghcr.io/gem5/${{ matrix.image }}:latest
         steps:
             - uses: actions/checkout@v3
-              with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-                  ref: develop
+              #              with:
+              #        # Scheduled workflows run on the default branch by default. We
+              #        # therefore need to explicitly checkout the develop branch.
+              #                  ref: develop
 
             - name: ccache
               uses: hendrikmuhs/ccache-action@v1.2
